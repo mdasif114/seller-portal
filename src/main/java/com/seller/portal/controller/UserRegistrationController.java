@@ -28,6 +28,7 @@ public class UserRegistrationController {
 
     @GetMapping
     public String showRegistrationForm(Model model) {
+    	//model.addAttribute("user", new UserRegistrationDto());  --> you can also add this way instead of using @ModelAttribute, thymleaf use this class to store form details 
         return "user_registration";
     }
 
@@ -45,6 +46,6 @@ public class UserRegistrationController {
         }
 
         userService.save(userDto);
-        return "redirect:/user_registration?success";
+        return "redirect:/user_registration?success"; //success is a flag defined in user_registration form as param.success
     }
 }

@@ -1,103 +1,125 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" type="text/css"
-          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
 
-    <title>Registration - Address</title>
+<title>Registration - Bank Account</title>
 </head>
 
 <body>
-    <header></header>
-    <section class="main-wrap">
-        <div class="dashboardWrap">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <h2>Registration - Bank</h2>
-                         <div class="loggedUserBox"><span sec:authentication="principal.username">User</span> <a sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a></div>
-                    </div>
-                    
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="loginWrap registrationWrap">
-                        <div class="row">
+	<!-- Below code snippet create navigation header bar -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#" th:href="@{/dashboard}">Dashboard</a>
+			</div>
+		</div>
+	</nav>
+	<br>
+	<br>
+	<br>
+	<div class="col-md-12 col-md-offset-1">
+		<h2>Registration - Bank</h2>
+		<div class="col-md-4 col-md-offset-8">
+			<div class="loggedUserBox">
+				<span sec:authentication="principal.username">User</span> <a
+					sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
 
-                            <div class="col-xs-12">
-                                <div class="inputFeild">
-                                    <div class="row">
-                                        <div class="col-xs-5 text-right">
-                                            <label for="accountName">Account Name<sup>*</sup></label>
-                                        </div>
-                                        <div class="col-xs-7">
-                                            <input required type="text" maxlength="50" id="accountName" class="inpDefault js-required">
-                                            <span class="errorText"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12">
-                                <div class="inputFeild">
-                                    <div class="row">
-                                        <div class="col-xs-5 text-right">
-                                            <label for="accountNumber">Account Number<sup>*</sup></label>
-                                        </div>
-                                        <div class="col-xs-7">
-                                            <input required type="text" maxlength="50" id="accountNumber" class="inpDefault js-required js-numbersOnly">
-                                            <span class="errorText"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12">
-                                <div class="inputFeild">
-                                    <div class="row">
-                                        <div class="col-xs-5 text-right">
-                                            <label for="bankName">Bank Name<sup>*</sup></label>
-                                        </div>
-                                        <div class="col-xs-7">
-                                            <input required type="text" maxlength="50" id="bankName" class="inpDefault js-required">
-                                            <span class="errorText"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12">
-                                <div class="inputFeild">
-                                    <div class="row">
-                                        <div class="col-xs-5 text-right">
-                                            <label for="swiftCode">Swift Code<sup>*</sup></label>
-                                        </div>
-                                        <div class="col-xs-7">
-                                            <input required type="text" maxlength="50" id="swiftCode" class="inpDefault js-required">
-                                            <span class="errorText"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 text-left">
-                                <p>* Mandatorty field</p>
-                            </div>
-                            <div class="col-sm-6 text-right">
-                                <button>Submit</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <footer></footer>
-    <script type="text/javascript" src="assets/js/jquery-3.1.1.js"></script>
-    <script type="text/javascript" src="assets/js/modernizr-2.6.2.min.js"></script>
-    <script type="text/javascript" src="assets/js/detectizr.min.js"></script>
-    <script type="text/javascript" src="assets/js/custom.js"></script>
+				<!-- Below snippet to create registration form  -->
+				<br> <br>
+
+				<form th:action="@{/register_bank_account}" th:object="${bank}"
+					method="post">
+
+					<p class="error-message" th:if="${#fields.hasGlobalErrors()}"
+						th:each="error : ${#fields.errors('global')}" th:text="${error}">Validation
+						error</p>
+
+					<div class="form-group"
+						th:classappend="${#fields.hasErrors('accountName')}? 'has-error':''">
+						<label for="accountName" class="control-label"> Account
+							Name<sup>*</sup>:
+						</label> <input id="accountName" class="form-control"
+							th:field="*{accountName}" required autofocus="autofocus" />
+						<p class="error-message"
+							th:each="error: ${#fields.errors('accountName')}"
+							th:text="${error}">Validation error</p>
+					</div>
+
+					<div class="form-group"
+						th:classappend="${#fields.hasErrors('accountNumber')}? 'has-error':''">
+						<label for="accountNumber" class="control-label"> Account
+							Number<sup>*</sup>:
+						</label> <input id="accountNumber" class="form-control"
+							th:field="*{accountNumber}" autofocus="autofocus" />
+						<p class="error-message"
+							th:each="error: ${#fields.errors('accountNumber')}"
+							th:text="${error}">Validation error</p>
+					</div>
+
+					<div class="form-group"
+						th:classappend="${#fields.hasErrors('bankName')}? 'has-error':''">
+						<label for="bankName" class="control-label"> Bank Name<sup>*</sup>:
+						</label> <input id="bankName" class="form-control" th:field="*{bankName}"
+							required autofocus="autofocus" />
+						<p class="error-message"
+							th:each="error: ${#fields.errors('bankName')}" th:text="${error}">Validation
+							error</p>
+					</div>
+
+					<div class="form-group"
+						th:classappend="${#fields.hasErrors('swiftCode')}? 'has-error':''">
+						<label for="swiftCode" class="control-label"> SWIFT Code<sup>*</sup>:
+						</label> <input id="swiftCode" class="form-control"
+							th:field="*{swiftCode}" required autofocus="autofocus" />
+						<p class="error-message"
+							th:each="error: ${#fields.errors('swiftCode')}"
+							th:text="${error}">Validation error</p>
+					</div>
+
+					<div class="col-sm-6 text-left">
+						<p>* Mandatorty field</p>
+					</div>
+
+					<div class="form-group">
+						<button type="submit" class="btn btn-success">Submit</button>
+					</div>
+
+					<div th:if="${param.success}">
+						<div class="alert alert-info">Your address saved
+							successfully</div>
+						<span> <a th:href="@{/dashboard}">Click here to go back
+								to Dashboard page</a></span>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript"
+		th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+	<script type="text/javascript"
+		th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+
 </body>
+
 </html>

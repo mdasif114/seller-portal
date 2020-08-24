@@ -9,11 +9,13 @@ public class MainController {
 
 	@GetMapping("/")
 	public String root() {
+		return "login";
+	}
+
+	@GetMapping("/dashboard")
+	public String dashboard() {
 		return "dashboard";
 	}
-	/*
-	 * @GetMapping("/login") public String login() { return "login"; }
-	 */
 
 	@GetMapping("/login")
 	public String login(Model model) {
@@ -23,21 +25,6 @@ public class MainController {
 	@GetMapping("/user")
 	public String userIndex() {
 		return "user/index";
-	}
-
-	@GetMapping("/register_address")
-	public String registerAddress() {
-		return "register_address";
-	}
-
-	@GetMapping("/register_identity")
-	public String registerIdentity() {
-		return "register_identity";
-	}
-
-	@GetMapping("/register_bank_account")
-	public String registerBankAccount() {
-		return "register_bank_account";
 	}
 
 }

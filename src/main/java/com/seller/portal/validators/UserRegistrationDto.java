@@ -1,93 +1,69 @@
 package com.seller.portal.validators;
 
-import com.seller.portal.utils.FieldMatch;
-
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
-@FieldMatch.List({
-        @FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match"),
-        @FieldMatch(first = "email", second = "confirmEmail", message = "The email fields must match")
-})
 public class UserRegistrationDto {
 
-    @NotEmpty
-    private String firstName;
+	@NotEmpty(message = "Please choose account type")
+	private String accountType;
 
-    @NotEmpty
-    private String lastName;
+	@NotEmpty(message = "Please select this field")
+	private String shopBasedIn;
 
-    @NotEmpty
-    private String password;
+	@NotEmpty(message = "Mobile number is required")
+	@Pattern(regexp = "^\\+(?:[0-9] ?){6,14}[0-9]$", message = "Please enter valid mobile number")
+	private String mobileNumber;
 
-    @NotEmpty
-    private String confirmPassword;
+	@Email
+	@NotEmpty(message = "Please enter valid email id")
+	@Pattern(regexp = "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$", message = "Please enter valid email id")
+	private String email;
 
-    @Email
-    @NotEmpty
-    private String email;
+	@NotEmpty(message = "The password field must have between 10 to 30 characters,"
+			+ " contains both upper-case and lower-case letters,\r\n" + " include one or more numerical digits and"
+			+ " one or more special characters (e.g. @, #, $).")
+	private String password;
 
-    @Email
-    @NotEmpty
-    private String confirmEmail;
+	public String getAccountType() {
+		return accountType;
+	}
 
-    @AssertTrue
-    private Boolean terms;
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public String getShopBasedIn() {
+		return shopBasedIn;
+	}
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public void setShopBasedIn(String shopBasedIn) {
+		this.shopBasedIn = shopBasedIn;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getConfirmEmail() {
-        return confirmEmail;
-    }
-
-    public void setConfirmEmail(String confirmEmail) {
-        this.confirmEmail = confirmEmail;
-    }
-
-    public Boolean getTerms() {
-        return terms;
-    }
-
-    public void setTerms(Boolean terms) {
-        this.terms = terms;
-    }
 }

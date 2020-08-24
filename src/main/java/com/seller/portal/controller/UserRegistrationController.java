@@ -1,8 +1,7 @@
 package com.seller.portal.controller;
 
-import com.seller.portal.entity.User;
-import com.seller.portal.service.UserService;
-import com.seller.portal.validators.UserRegistrationDto;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,40 +11,52 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
+import com.seller.portal.entity.User;
+import com.seller.portal.service.UserRegistrationService;
+import com.seller.portal.validators.UserRegistrationDto;
 
 @Controller
 @RequestMapping("/user_registration")
 public class UserRegistrationController {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserRegistrationService userService;
 
-    @ModelAttribute("user")
-    public UserRegistrationDto userRegistrationDto() {
-        return new UserRegistrationDto();
-    }
+	@ModelAttribute("user")
+	public UserRegistrationDto userRegistrationDto() {
+		return new UserRegistrationDto();
+	}
 
-    @GetMapping
-    public String showRegistrationForm(Model model) {
-    	//model.addAttribute("user", new UserRegistrationDto());  --> you can also add this way instead of using @ModelAttribute, thymleaf use this class to store form details 
-        return "user_registration";
-    }
+	@GetMapping
+	public String showRegistrationForm(Model model) {
+		// model.addAttribute("user", new UserRegistrationDto()); --> you can also add
+		// this way instead of using @ModelAttribute, thymleaf use this class to store
+		// form details
+		return "user_registration";
+	}
 
-    @PostMapping
-    public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto,
-                                      BindingResult result) {
+	@PostMapping
+	public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto,
+			BindingResult result) {
 
-        User existing = userService.findByEmail(userDto.getEmail());
-        if (existing != null) {
-            result.rejectValue("email", null, "There is already an account registered with that email");
-        }
+		User existing = userService.findByEmail(userDto.getEmail());
 
-        if (result.hasErrors()) {
-            return "user_registration";
-        }
+		if (existing != null && existing.getMobileNumber() != null) {
+			result.rejectValue("mobileNumber", null, "There is an account already registered with this mobile number");
+		}
 
-        userService.save(userDto);
-        return "redirect:/user_registration?success"; //success is a flag defined in user_registration form as param.success
-    }
+		if (existing != null && existing.getEmail() != null) {
+			result.rejectValue("email", null, "There is an account already registered with this email");
+		}
+
+		if (result.hasErrors()) {
+			System.out.println("From if block of UserRegistrationController");
+			return "user_registration";
+		} else {
+			System.out.println("From else block of UserRegistrationController");
+			userService.save(userDto);
+			return "redirect:/user_registration?success"; // success is a flag defined in user_registration form as
+														 // param.success
+		}
+	}
 }

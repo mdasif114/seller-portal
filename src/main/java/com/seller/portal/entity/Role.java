@@ -1,9 +1,12 @@
 package com.seller.portal.entity;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Role {
@@ -11,34 +14,45 @@ public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String name;
+	private Long roleId;
+	private String roleName;
+	
+	@ManyToMany(mappedBy = "roles")
+	private Set<User> users;
 
 	public Role() {
 	}
 
-	public Role(String name) {
-		this.name = name;
+	public Long getRoleId() {
+		return roleId;
 	}
 
-	public Long getId() {
-		return id;
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public Role(String roleName) {
+		this.roleName = roleName;
 	}
 
-	public String getName() {
-		return name;
+	public String getRoleName() {
+		return roleName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
 	}
 
 	@Override
 	public String toString() {
-		return "Role{" + "id=" + id + ", name='" + name + '\'' + '}';
+		return "Role{" + "id=" + roleId + ", name='" + roleName + '\'' + '}';
 	}
 }

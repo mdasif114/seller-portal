@@ -1,15 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:utext="${title}"></title>
+<title th:utext="Welcome"></title>
 </head>
 
 <body>
 
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
+	<!-- Include _menu.html -->
 
-<h2>Message : <span th:utext="${message}"></span></h2>
-
+	<div th:if="${param.success}">
+		<div class="alert alert-info">You've successfully registered.</div>
+		<span> <a th:href="@{/dashboard}">Click here for Dashboard page</a></span>
+	</div>
 </body>
 </html>

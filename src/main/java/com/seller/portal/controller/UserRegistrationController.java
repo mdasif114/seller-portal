@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.seller.portal.entity.User;
+import com.seller.portal.entities.User;
 import com.seller.portal.service.UserRegistrationService;
 import com.seller.portal.validators.UserRegistrationDto;
 
@@ -40,13 +40,12 @@ public class UserRegistrationController {
 			BindingResult result) {
 
 		User existing = userService.findByEmail(userDto.getEmail());
-
 		if (existing != null && existing.getMobileNumber() != null) {
-			result.rejectValue("mobileNumber", null, "There is an account already registered with this mobile number");
+			result.rejectValue("mobileNumber", null, "This mobile number is already registered");
 		}
 
 		if (existing != null && existing.getEmail() != null) {
-			result.rejectValue("email", null, "There is an account already registered with this email");
+			result.rejectValue("email", null, "This email is already regiestered");
 		}
 
 		if (result.hasErrors()) {
@@ -55,8 +54,7 @@ public class UserRegistrationController {
 		} else {
 			System.out.println("From else block of UserRegistrationController");
 			userService.save(userDto);
-			return "redirect:/user_registration?success"; // success is a flag defined in user_registration form as
-														 // param.success
+			return "redirect:/login"; 
 		}
 	}
 }

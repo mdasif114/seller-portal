@@ -12,22 +12,6 @@
 
 </head>
 <body>
-
-	<!--  <nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
-   <div class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed"
-     data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-     aria-controls="navbar">
-     <span class="sr-only">Toggle navigation</span> <span
-      class="icon-bar"></span> <span class="icon-bar"></span> <span
-      class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="#" th:href="@{/}">Login</a>
-   </div>
-  </div>
- </nav>
- -->
 	<br>
 	<br>
 
@@ -36,6 +20,9 @@
 		<div class="row">
 			<div class="col-md-6 col-md-offset-0">
 				<h1>Login</h1>
+			</div>
+			<div th:if="${param.registrationSuccess}">
+				<div class="alert alert-info">You've successfully registered. Please login here</div>
 			</div>
 			<div class="col-md-4 col-md-offset-3">
 				<form th:action="@{/login}" method="post">
@@ -58,7 +45,7 @@
 						<div class="row">
 							<div class="col-sm-6 col-sm-offset-3">
 								<input type="submit" name="login-submit" id="login-submit"
-									class="form-control btn btn-primary" value="Log In" />
+									class="form-control btn btn-primary" value="Login" />
 							</div>
 						</div>
 					</div>

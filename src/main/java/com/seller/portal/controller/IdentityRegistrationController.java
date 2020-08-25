@@ -4,7 +4,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,51 +12,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.seller.portal.service.IdentityRegistrationService;
-import com.seller.portal.validators.AddressRegistrationDAO;
-import com.seller.portal.validators.IdentityRegistrationDAO;
+import com.seller.portal.validators.IdentityRegistrationDto;
 
 @Controller
 @RequestMapping("/register_identity")
 public class IdentityRegistrationController {
 
 	@Autowired
-	private IdentityRegistrationService identityRegistrationService;
+	private IdentityRegistrationService identityService;
 
 	@ModelAttribute("identity")
-	public IdentityRegistrationDAO identityRegistrationDAO() {
-		return new IdentityRegistrationDAO();
+	public IdentityRegistrationDto identityRegistrationDAO() {
+		return new IdentityRegistrationDto();
 	}
 
 	@GetMapping
 	public ModelAndView viewAddressRegistrationForm(ModelAndView modelAndView) {
 
-		IdentityRegistrationDAO identity = new IdentityRegistrationDAO();
+		IdentityRegistrationDto identity = new IdentityRegistrationDto();
 
-		if (identityRegistrationService.getIdentityDetails() != null) {
-			identity.setDocumentNumber(identityRegistrationService.getIdentityDetails().getDocumentNumber());
-			identity.setDocumentType((identityRegistrationService.getIdentityDetails().getDocumentType()));
+		if (identityService.getIdentityDetails() != null) {
+			identity.setDocumentNumber(identityService.getIdentityDetails().getDocumentNumber());
+			identity.setDocumentType((identityService.getIdentityDetails().getDocumentType()));
 		}
-		
+
 		modelAndView.addObject("identity", identity);
 		modelAndView.setViewName("register_identity");
 		return modelAndView;
 	}
 
-	
 	@PostMapping
-	public String registerUserAccount(@ModelAttribute("identity") @Valid IdentityRegistrationDAO identityDao,
+	public String registerUserAccount(@ModelAttribute("identity") @Valid IdentityRegistrationDto identityDao,
 			BindingResult result) {
 		if (result.hasErrors()) {
-			System.out.println("From if block of IdentityRegistrationController");
 			return "register_identity";
-		} else {
-			System.out.println("From else block of IdentityRegistrationController");
-
-			if (identityRegistrationService.saveIdentityDetails(identityDao)) {
-				return "redirect:/register_identity?success";
-			} else {
-				return "redirect:/login";
-			}
 		}
+
+		return identityService.saveIdentityDetails(identityDao) ? "redirect:/register_identity?success"
+				: "redirect:/login";
 	}
 }

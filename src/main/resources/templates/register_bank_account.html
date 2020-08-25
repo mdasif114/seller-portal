@@ -59,7 +59,7 @@
 						<label for="accountName" class="control-label"> Account
 							Name<sup>*</sup>:
 						</label> <input id="accountName" class="form-control"
-							th:field="*{accountName}" required autofocus="autofocus" />
+							th:field="*{accountName}" autofocus="autofocus" />
 						<p class="error-message"
 							th:each="error: ${#fields.errors('accountName')}"
 							th:text="${error}">Validation error</p>
@@ -80,7 +80,7 @@
 						th:classappend="${#fields.hasErrors('bankName')}? 'has-error':''">
 						<label for="bankName" class="control-label"> Bank Name<sup>*</sup>:
 						</label> <input id="bankName" class="form-control" th:field="*{bankName}"
-							required autofocus="autofocus" />
+							 autofocus="autofocus" />
 						<p class="error-message"
 							th:each="error: ${#fields.errors('bankName')}" th:text="${error}">Validation
 							error</p>
@@ -90,7 +90,7 @@
 						th:classappend="${#fields.hasErrors('swiftCode')}? 'has-error':''">
 						<label for="swiftCode" class="control-label"> SWIFT Code<sup>*</sup>:
 						</label> <input id="swiftCode" class="form-control"
-							th:field="*{swiftCode}" required autofocus="autofocus" />
+							th:field="*{swiftCode}"  autofocus="autofocus" />
 						<p class="error-message"
 							th:each="error: ${#fields.errors('swiftCode')}"
 							th:text="${error}">Validation error</p>
@@ -105,7 +105,7 @@
 					</div>
 
 					<div th:if="${param.success}">
-						<div class="alert alert-info">Your address saved
+						<div class="alert alert-info">Bank details registerd
 							successfully</div>
 						<span> <a th:href="@{/dashboard}">Click here to go back
 								to Dashboard page</a></span>

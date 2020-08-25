@@ -36,20 +36,18 @@ alter table USERS_ROLES
   references role (ROLE_ID);
   
 CREATE TABLE ADDRESS (
-  USER_ID BIGINT not null,
   ADDRESS_ID BIGINT not null,
-  line_one varchar(255),
+  line_one varchar(255) not null,
   line_two varchar(255),
-  city varchar(255),
-  post_code varchar(255),
-  country varchar(255)
+  city varchar(255) not null,
+  post_code varchar(255) not null,
+  country varchar(255) not null
 );
 
 alter table ADDRESS
   add constraint ADDRESS_PK primary key (ADDRESS_ID);
 
 CREATE TABLE IDENTITY (
-  USER_ID BIGINT not null,
   IDENTITY_ID BIGINT not null,
   document_type varchar(255) not null,
   document_number varchar(255) not null
@@ -59,7 +57,6 @@ alter table IDENTITY
   add constraint IDENTITY_PK primary key (IDENTITY_ID);
   
 CREATE TABLE BANK (
-  USER_ID BIGINT not null,
   BANK_ID BIGINT not null,
   account_name varchar(255) not null,
   account_number varchar(255) not null,

@@ -5,11 +5,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.seller.portal.entity.Identity;
-import com.seller.portal.entity.User;
+import com.seller.portal.entities.Identity;
+import com.seller.portal.entities.User;
 import com.seller.portal.repositories.IdentityRepository;
 import com.seller.portal.repositories.UserRepository;
-import com.seller.portal.validators.IdentityRegistrationDAO;
+import com.seller.portal.validators.IdentityRegistrationDto;
 
 @Service
 public class IdentityRegistrationService {
@@ -20,14 +20,9 @@ public class IdentityRegistrationService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public User getAuthenticatedUser() {
+	private User getAuthenticatedUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
-		return findByEmail(username);
-	}
-
-	public User findByEmail(String email) {
-		return userRepository.findByEmail(email);
+		return userRepository.findByEmail(authentication.getName());
 	}
 
 	public Identity getIdentityDetails() {
@@ -38,7 +33,7 @@ public class IdentityRegistrationService {
 		return null;
 	}
 
-	public boolean saveIdentityDetails(IdentityRegistrationDAO identityRegistrationDAO) {
+	public boolean saveIdentityDetails(IdentityRegistrationDto identityRegistrationDAO) {
 		User user = getAuthenticatedUser();
 		
 		if (user == null) {
@@ -54,7 +49,7 @@ public class IdentityRegistrationService {
 		return true;
 	}
 
-	private void addIdentityDetails(User user, IdentityRegistrationDAO identityRegistrationDAO) {
+	private void addIdentityDetails(User user, IdentityRegistrationDto identityRegistrationDAO) {
 		Identity identity = new Identity();
 		identity.setIdentityId(user.getUserId());
 		identity.setDocumentType(identityRegistrationDAO.getDocumentType());

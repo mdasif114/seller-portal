@@ -11,21 +11,6 @@
 <title>Registration</title>
 </head>
 <body>
-	<!-- Below code snippet create navigation header bar -->
-	<!--  <nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
-   <div class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed"
-     data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-     aria-controls="navbar">
-     <span class="sr-only">Toggle navigation</span> <span
-      class="icon-bar"></span> <span class="icon-bar"></span> <span
-      class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="#" th:href="@{/}">Registration</a>
-   </div>
-  </div>
- </nav> -->
 
 	<br>
 
@@ -63,7 +48,6 @@
 						<label for="shopBasedIn" class="control-label"> Shop Based
 							In<sup>*</sup>:
 						</label> <select name="shopBasedIn" id="shopBasedIn">
-							<option value ="">Please Select</option>
 							<option value="China Mainland">China Mainland</option>
 							<option value="France">France</option>
 							<option value="Indonesia">Indonesia</option>
@@ -74,8 +58,8 @@
 							<option value="Singapore">Singapore</option>
 							<option value="Spain">Spain</option>
 							<option value="Thailand">Thailand</option>
-							<option value="Thailand">Turkey</option>
-							<option value="Thailand">Vietnam</option>
+							<option value="Turkey">Turkey</option>
+							<option value="Vietnam">Vietnam</option>
 						</select>
 						<p class="error-message"
 							th:each="error: ${#fields.errors('shopBasedIn')}"
@@ -87,7 +71,7 @@
 						<label for="mobileNumber" class="control-label"> Mobile
 							Number<sup>*</sup>:
 						</label> <input id="mobileNumber" class="form-control"
-							th:field="*{mobileNumber}" required autofocus="autofocus" />
+							th:field="*{mobileNumber}" autofocus="autofocus" />
 						<p class="error-message"
 							th:each="error: ${#fields.errors('mobileNumber')}"
 							th:text="${error}">Validation error</p>
@@ -95,8 +79,8 @@
 
 					<div class="form-group"
 						th:classappend="${#fields.hasErrors('email')}? 'has-error':''">
-						<label for="email" class="control-label">E-mail</label> <input
-							id="email" class="form-control" th:field="*{email}" />
+						<label for="email" class="control-label">Email address</label><sup>*</sup>:
+						<input id="email" class="form-control" th:field="*{email}" />
 						<p class="error-message"
 							th:each="error : ${#fields.errors('email')}" th:text="${error}">Validation
 							error</p>
@@ -104,30 +88,24 @@
 
 					<div class="form-group"
 						th:classappend="${#fields.hasErrors('password')}? 'has-error':''">
-						<label for="password" class="control-label">Password</label> <input
-							id="password" class="form-control" type="password"
+						<label for="password" class="control-label">Password</label><sup>*</sup>:
+						<input id="password" class="form-control" type="password"
 							th:field="*{password}" />
 						<p class="error-message"
 							th:each="error : ${#fields.errors('password')}"
 							th:text="${error}">Validation error</p>
 					</div>
-
+					<br>
 					<div class="col-sm-6 text-left">
-						<p>* Mandatorty field</p>
+						<p>
+							<b>*</b> Mandatorty field
+						</p>
 					</div>
 
 					<div class="form-group">
 						<button type="submit" class="btn btn-success">Register</button>
-						<span>Already registered? <a href="/" th:href="@{/login}">Login
-								here</a></span>
 					</div>
 
-					<div th:if="${param.success}">
-						<div class="alert alert-info">You've successfully
-							registered.</div>
-						<span> <a th:href="@{/dashboard}">Click here
-								for Dashboard page</a></span>
-					</div>
 				</form>
 			</div>
 		</div>

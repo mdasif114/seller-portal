@@ -13,9 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-//import com.alibaba.otter.manager.biz.user.UserService;
-import com.seller.portal.entity.Role;
-import com.seller.portal.entity.User;
+import com.seller.portal.entities.Role;
+import com.seller.portal.entities.User;
 import com.seller.portal.repositories.UserRepository;
 import com.seller.portal.validators.UserRegistrationDto;
 

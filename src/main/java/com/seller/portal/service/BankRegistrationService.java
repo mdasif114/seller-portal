@@ -5,11 +5,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.seller.portal.entity.Bank;
-import com.seller.portal.entity.User;
+import com.seller.portal.entities.Bank;
+import com.seller.portal.entities.User;
 import com.seller.portal.repositories.BankAccountRepository;
 import com.seller.portal.repositories.UserRepository;
-import com.seller.portal.validators.BankRegistrationDAO;
+import com.seller.portal.validators.BankAccountRegistrationDto;
 
 @Service
 public class BankRegistrationService {
@@ -20,14 +20,9 @@ public class BankRegistrationService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public User getAuthenticatedUser() {
+	private User getAuthenticatedUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
-		return findByEmail(username);
-	}
-
-	public User findByEmail(String email) {
-		return userRepository.findByEmail(email);
+		return userRepository.findByEmail(authentication.getName());
 	}
 
 	public Bank getBankDetails() {
@@ -38,25 +33,15 @@ public class BankRegistrationService {
 		return null;
 	}
 
-	public void saveBankDetails(BankRegistrationDAO bankRegistrationDAO) {
+	public void saveBankDetails(BankAccountRegistrationDto bankRegistrationDAO) {
 		User user = getAuthenticatedUser();
-		if (user != null && !bankAccountRepository.existsById(user.getUserId())) {
-			addBankDetails(user, bankRegistrationDAO);
-			return;
-		} else {
-			updateBankDetails(user, bankRegistrationDAO);
-		}
-	}
-
-	private void updateBankDetails(User user, BankRegistrationDAO bankRegistrationDAO) {
 		if (user != null && bankAccountRepository.existsById(user.getUserId())) {
-			System.out.println("Deleting existing address for user id: " + user.getUserId());
 			bankAccountRepository.deleteById(user.getUserId());
 		}
 		addBankDetails(user, bankRegistrationDAO);
 	}
 
-	private void addBankDetails(User user, BankRegistrationDAO bankRegistrationDAO) {
+	private void addBankDetails(User user, BankAccountRegistrationDto bankRegistrationDAO) {
 		Bank bank = new Bank();
 		bank.setBankId(user.getUserId());
 		bank.setAccountName(bankRegistrationDAO.getAccountName());

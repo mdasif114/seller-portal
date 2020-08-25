@@ -54,7 +54,7 @@
 						th:classappend="${#fields.hasErrors('lineOne')}? 'has-error':''">
 						<label for="lineOne" class="control-label"> Line 1<sup>*</sup>:
 						</label> <input id="lineOne" class="form-control" th:field="*{lineOne}"
-							required autofocus="autofocus" />
+							autofocus="autofocus" />
 						<p class="error-message"
 							th:each="error: ${#fields.errors('lineOne')}" th:text="${error}">Validation
 							error</p>
@@ -73,7 +73,7 @@
 					<div class="form-group"
 						th:classappend="${#fields.hasErrors('city')}? 'has-error':''">
 						<label for="city" class="control-label"> City<sup>*</sup>:
-						</label> <input id="city" class="form-control" th:field="*{city}" required
+						</label> <input id="city" class="form-control" th:field="*{city}"
 							autofocus="autofocus" />
 						<p class="error-message"
 							th:each="error: ${#fields.errors('city')}" th:text="${error}">Validation
@@ -84,7 +84,7 @@
 						th:classappend="${#fields.hasErrors('postCode')}? 'has-error':''">
 						<label for="postCode" class="control-label"> Postcode<sup>*</sup>:
 						</label> <input id="postCode" class="form-control" th:field="*{postCode}"
-							required autofocus="autofocus" />
+							 autofocus="autofocus" />
 						<p class="error-message"
 							th:each="error: ${#fields.errors('postCode')}" th:text="${error}">Validation
 							error</p>
@@ -94,7 +94,6 @@
 						th:classappend="${#fields.hasErrors('country')}? 'has-error':''">
 						<label for="country" class="control-label">Country<sup>*</sup>:
 						</label> <select name="country" id="country" th:field="*{country}">
-							<option value="">Please Select</option>
 							<option value="China Mainland">China Mainland</option>
 							<option value="France">France</option>
 							<option value="Indonesia">Indonesia</option>
@@ -105,8 +104,8 @@
 							<option value="Singapore">Singapore</option>
 							<option value="Spain">Spain</option>
 							<option value="Thailand">Thailand</option>
-							<option value="Thailand">Turkey</option>
-							<option value="Thailand">Vietnam</option>
+							<option value="Turkey">Turkey</option>
+							<option value="Vietnam">Vietnam</option>
 						</select>
 						<p class="error-message"
 							th:each="error: ${#fields.errors('country')}" th:text="${error}">Validation

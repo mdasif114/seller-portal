@@ -60,7 +60,7 @@
 						th:classappend="${#fields.hasErrors('documentType')}? 'has-error':''">
 						<label for="documentType" class="control-label">Document
 							type<sup>*</sup>:
-						</label> <select name="documentType" id="documentType">
+						</label> <select name="documentType" id="documentType" th:field="*{documentType}">
 							<option value="Identity Card">Identity Card</option>
 							<option value="Passport">Passport</option>
 							<option value="Business License">Business License</option>
@@ -90,7 +90,7 @@
 					</div>
 
 					<div th:if="${param.success}">
-						<div class="alert alert-info">Your address saved
+						<div class="alert alert-info">address saved
 							successfully</div>
 						<span> <a th:href="@{/dashboard}">Click here
 								to go back to Dashboard page</a></span>

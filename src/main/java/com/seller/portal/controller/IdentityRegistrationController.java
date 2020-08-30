@@ -1,7 +1,8 @@
 package com.seller.portal.controller;
 
-import javax.validation.Valid;
-
+import com.seller.portal.service.IdentityRegistrationService;
+import com.seller.portal.validators.IdentityRegistrationDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -11,44 +12,42 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.seller.portal.service.IdentityRegistrationService;
-import com.seller.portal.validators.IdentityRegistrationDto;
+import javax.validation.Valid;
 
+@Slf4j
 @Controller
-@RequestMapping("/register_identity")
+@RequestMapping("/identityRegistration")
 public class IdentityRegistrationController {
 
-	@Autowired
-	private IdentityRegistrationService identityService;
+    @Autowired
+    private IdentityRegistrationService identityService;
 
-	@ModelAttribute("identity")
-	public IdentityRegistrationDto identityRegistrationDAO() {
-		return new IdentityRegistrationDto();
-	}
+    @GetMapping
+    public ModelAndView viewIdentityRegistration(ModelAndView modelAndView) {
+        IdentityRegistrationDto identityDto;
+        try {
+            identityDto = identityService.getIdentityDetails();
+            log.info("display identity details on GUI ", identityDto);
+            modelAndView.addObject("identity", identityDto);
+            modelAndView.setViewName("identityRegistration");
+        } catch (IllegalStateException ise) {
+            log.error("Failed to retrieve userid from session state. ", ise);
+            modelAndView.setViewName("login");
+        } catch (IllegalArgumentException iae) {
+            log.error("Failed to retrieve data based on given user id. ", iae);
+            modelAndView.setViewName("login");
+        }
+        return modelAndView;
+    }
 
-	@GetMapping
-	public ModelAndView viewAddressRegistrationForm(ModelAndView modelAndView) {
-
-		IdentityRegistrationDto identity = new IdentityRegistrationDto();
-
-		if (identityService.getIdentityDetails() != null) {
-			identity.setDocumentNumber(identityService.getIdentityDetails().getDocumentNumber());
-			identity.setDocumentType((identityService.getIdentityDetails().getDocumentType()));
-		}
-
-		modelAndView.addObject("identity", identity);
-		modelAndView.setViewName("register_identity");
-		return modelAndView;
-	}
-
-	@PostMapping
-	public String registerUserAccount(@ModelAttribute("identity") @Valid IdentityRegistrationDto identityDao,
-			BindingResult result) {
-		if (result.hasErrors()) {
-			return "register_identity";
-		}
-
-		return identityService.saveIdentityDetails(identityDao) ? "redirect:/register_identity?success"
-				: "redirect:/login";
-	}
+    @PostMapping
+    public String registerUserAccount(@ModelAttribute("identity") @Valid IdentityRegistrationDto identityDto,
+                                      BindingResult result) {
+        if (result.hasErrors()) {
+            return "identityRegistration";
+        } else {
+            identityService.saveIdentityDetails(identityDto);
+            return "redirect:/identityRegistration?success";
+        }
+    }
 }

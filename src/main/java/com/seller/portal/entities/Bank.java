@@ -1,15 +1,16 @@
 package com.seller.portal.entities;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
-
-import lombok.Data;
+import java.io.Serializable;
 
 @Data
 @Entity
-public class Bank {
+public class Bank  implements Serializable {
 
 	@Id
 	private Long bankId;

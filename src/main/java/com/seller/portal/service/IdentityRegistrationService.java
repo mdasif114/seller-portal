@@ -1,60 +1,57 @@
 package com.seller.portal.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
 import com.seller.portal.entities.Identity;
 import com.seller.portal.entities.User;
 import com.seller.portal.repositories.IdentityRepository;
-import com.seller.portal.repositories.UserRepository;
 import com.seller.portal.validators.IdentityRegistrationDto;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
+import java.util.Optional;
+
+@Slf4j
 @Service
 public class IdentityRegistrationService {
 
-	@Autowired
-	private IdentityRepository identityRepository;
+    @Autowired
+    private IdentityRepository identityRepo;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    HttpSession session;
 
-	private User getAuthenticatedUser() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return userRepository.findByEmail(authentication.getName());
-	}
+    /**
+     * This method is to fetch Identity details of user from database.
+     * and returns the data in transfer object
+     *
+     * @return user identity details DTO object
+     * @throws Exception
+     */
+    public IdentityRegistrationDto getIdentityDetails() {
+        Long userId = (Long) session.getAttribute("userId");
+        Optional identityObject = identityRepo.findById(userId);
+        IdentityRegistrationDto identityDto = new IdentityRegistrationDto();
+        if (identityObject.isPresent()) {
+            Identity identity = (Identity) identityObject.get();
+            identityDto.setDocumentNumber(identity.getDocumentNumber());
+            identityDto.setDocumentType(identity.getDocumentType());
+        }
+        return identityDto;
+    }
 
-	public Identity getIdentityDetails() {
-		User user = getAuthenticatedUser();
-		if (user != null && identityRepository.existsById(user.getUserId())) {
-			return identityRepository.getOne(user.getUserId());
-		}
-		return null;
-	}
-
-	public boolean saveIdentityDetails(IdentityRegistrationDto identityRegistrationDAO) {
-		User user = getAuthenticatedUser();
-		
-		if (user == null) {
-			return false;
-		}
-		
-		if (identityRepository.existsById(user.getUserId())) {
-			System.out.println("Deleting existing address for user id: " + user.getUserId());
-			identityRepository.deleteById(user.getUserId());
-		}
-		
-		addIdentityDetails(user, identityRegistrationDAO);
-		return true;
-	}
-
-	private void addIdentityDetails(User user, IdentityRegistrationDto identityRegistrationDAO) {
-		Identity identity = new Identity();
-		identity.setIdentityId(user.getUserId());
-		identity.setDocumentType(identityRegistrationDAO.getDocumentType());
-		identity.setDocumentNumber(identityRegistrationDAO.getDocumentNumber());
-		identity.setUser(user);
-		identityRepository.save(identity);
-	}
+    /**
+     * This method is to store Identity details of user in database
+     *
+     * @param identityRegistrationDto it contains the identity details of user.
+     */
+    public void saveIdentityDetails(IdentityRegistrationDto identityRegistrationDto) {
+        Long userId = (Long) session.getAttribute("userId");
+        Identity identity = new Identity();
+        identity.setDocumentType(identityRegistrationDto.getDocumentType());
+        identity.setDocumentNumber(identityRegistrationDto.getDocumentNumber());
+        identity.setIdentityId(userId);
+        identity.setUser(new User(userId));
+        identityRepo.save(identity);
+    }
 }

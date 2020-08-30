@@ -1,7 +1,7 @@
 package com.seller.portal.controller;
 
-import javax.validation.Valid;
-
+import com.seller.portal.service.UserRegistrationService;
+import com.seller.portal.validators.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,50 +11,50 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.seller.portal.entities.User;
-import com.seller.portal.service.UserRegistrationService;
-import com.seller.portal.validators.UserRegistrationDto;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/user_registration")
 public class UserRegistrationController {
 
-	@Autowired
-	private UserRegistrationService userService;
+    @Autowired
+    private UserRegistrationService userService;
 
-	@ModelAttribute("user")
-	public UserRegistrationDto userRegistrationDto() {
-		return new UserRegistrationDto();
-	}
+    @ModelAttribute("user")
+    public UserRegistrationDto userRegistrationDto() {
+        return new UserRegistrationDto();
+    }
 
-	@GetMapping
-	public String showRegistrationForm(Model model) {
-		// model.addAttribute("user", new UserRegistrationDto()); --> you can also add
-		// this way instead of using @ModelAttribute, thymleaf use this class to store
-		// form details
-		return "user_registration";
-	}
+    @GetMapping
+    public String showRegistrationForm(Model model) {
+        return "user_registration";
+    }
 
-	@PostMapping
-	public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto,
-			BindingResult result) {
+    @PostMapping
+    public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto,
+                                      BindingResult result) {
 
-		User existing = userService.findByEmail(userDto.getEmail());
-		if (existing != null && existing.getMobileNumber() != null) {
-			result.rejectValue("mobileNumber", null, "This mobile number is already registered");
-		}
+        if (isMobileNumberRegistered(userDto)) {
+            result.rejectValue("mobileNumber", null, "This mobile number is already registered");
+        }
 
-		if (existing != null && existing.getEmail() != null) {
-			result.rejectValue("email", null, "This email is already regiestered");
-		}
+        if (isEmailRegistered(userDto)) {
+            result.rejectValue("email", null, "This email is already registered");
+        }
 
-		if (result.hasErrors()) {
-			System.out.println("From if block of UserRegistrationController");
-			return "user_registration";
-		} else {
-			System.out.println("From else block of UserRegistrationController");
-			userService.save(userDto);
-			return "redirect:/login"; 
-		}
-	}
+        if (result.hasErrors()) {
+            return "user_registration";
+        } else {
+            userService.save(userDto);
+            return "redirect:/login?success";
+        }
+    }
+
+    private boolean isMobileNumberRegistered(@Valid UserRegistrationDto userDto) {
+        return userService.findByMobileNumber(userDto.getMobileNumber()) != null;
+    }
+
+    private boolean isEmailRegistered(@Valid UserRegistrationDto userDto) {
+        return userService.findByEmail(userDto.getEmail()) != null;
+    }
 }

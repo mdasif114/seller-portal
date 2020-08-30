@@ -7,5 +7,4 @@ import com.seller.portal.entities.Bank;
 
 @Repository
 public interface BankAccountRepository extends JpaRepository<Bank, Long>  {
-
 }

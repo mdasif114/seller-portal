@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+
+    <title>Registration - Bank Account</title>
+</head>
+
+<body>
+<br>
+<div class="col-md-12 col-md-offset-1">
+    <h2>Registration - Bank</h2>
+    <div class="col-md-4 col-md-offset-8">
+        <div class="loggedUserBox">
+            <span sec:authentication="principal.username">User</span> <a
+                sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
+            <!-- Below snippet to create registration form  -->
+            <br> <br>
+
+            <form th:action="@{/bankAccountRegistration}" th:object="${bank}"
+                  method="post">
+
+                <p class="error-message" th:if="${#fields.hasGlobalErrors()}"
+                   th:each="error : ${#fields.errors('global')}" th:text="${error}">Validation
+                    error</p>
+
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('accountName')}? 'has-error':''">
+                    <label for="accountName" class="control-label"> Account
+                        Name<sup>*</sup>:
+                    </label> <input id="accountName" class="form-control"
+                                    th:field="*{accountName}" autofocus="autofocus"/>
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('accountName')}"
+                       th:text="${error}">Validation error</p>
+                </div>
+
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('accountNumber')}? 'has-error':''">
+                    <label for="accountNumber" class="control-label"> Account
+                        Number<sup>*</sup>:
+                    </label> <input id="accountNumber" class="form-control"
+                                    th:field="*{accountNumber}" autofocus="autofocus"/>
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('accountNumber')}"
+                       th:text="${error}">Validation error</p>
+                </div>
+
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('bankName')}? 'has-error':''">
+                    <label for="bankName" class="control-label"> Bank Name<sup>*</sup>:
+                    </label> <input id="bankName" class="form-control" th:field="*{bankName}"
+                                    autofocus="autofocus"/>
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('bankName')}" th:text="${error}">Validation
+                        error</p>
+                </div>
+
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('swiftCode')}? 'has-error':''">
+                    <label for="swiftCode" class="control-label"> SWIFT Code<sup>*</sup>:
+                    </label> <input id="swiftCode" class="form-control"
+                                    th:field="*{swiftCode}" autofocus="autofocus"/>
+                    <p class="error-message"
+                       th:each="error: ${#fields.errors('swiftCode')}"
+                       th:text="${error}">Validation error</p>
+                </div>
+
+                <br>
+                <div class="col-sm-10 text-left">
+                    <p>* Mandatorty field</p>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+
+                <div th:if="${param.success}">
+                    <div class="col-sm-20 text-left">
+                        <div class="alert alert-info">Bank details saved
+                            successfully.
+                            <a th:href="@{/dashboard}">Click here to go back to
+                                dashboard page</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+<script type="text/javascript"
+        th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+
+</body>
+
+</html>

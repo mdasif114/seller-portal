@@ -1,7 +1,8 @@
 package com.seller.portal.controller;
 
-import javax.validation.Valid;
-
+import com.seller.portal.service.BankRegistrationService;
+import com.seller.portal.validators.BankRegistrationDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -11,50 +12,42 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.seller.portal.entities.Bank;
-import com.seller.portal.service.BankRegistrationService;
-import com.seller.portal.validators.BankAccountRegistrationDto;
+import javax.validation.Valid;
 
+@Slf4j
 @Controller
-@RequestMapping("/register_bank_account")
+@RequestMapping("/bankAccountRegistration")
 public class BankRegistrationController {
 
-	@Autowired
-	private BankRegistrationService bankService;
+    @Autowired
+    private BankRegistrationService bankRepoService;
 
-	@ModelAttribute("bank")
-	public BankAccountRegistrationDto bankRegistrationDAO() {
-		return new BankAccountRegistrationDto();
-	}
+    @GetMapping
+    public ModelAndView viewBankDetails(ModelAndView modelAndView) {
+        BankRegistrationDto bankdto;
+        try {
+            bankdto = bankRepoService.getBankDetails();
+            modelAndView.addObject("bank", bankdto);
+            modelAndView.setViewName("bankAccountRegistration");
+        } catch (IllegalStateException ise) {
+            log.error("Failed to retrieve userid from session state. ", ise);
+            modelAndView.setViewName("login");
+        } catch (IllegalArgumentException iae) {
+            log.error("Failed to retrieve data based on given user id. ", iae);
+            modelAndView.setViewName("login");
+        }
+        return modelAndView;
+    }
 
-	@GetMapping
-	public ModelAndView viewBankDetailsForm(ModelAndView modelAndView) {
+    @PostMapping
+    public String registerUserAccount(@ModelAttribute("bank") @Valid BankRegistrationDto bankDto,
+                                      BindingResult result) {
 
-		Bank bankEnity = (Bank) bankService.getBankDetails();
-		BankAccountRegistrationDto bank = new BankAccountRegistrationDto();
-
-		if (bankEnity != null) {
-			bank.setAccountName(bankEnity.getAccountName());
-			bank.setAccountNumber(bankEnity.getAccountNumber());
-			bank.setBankName(bankEnity.getBankName());
-			bank.setSwiftCode(bankEnity.getSwiftCode());
-		}
-
-		modelAndView.addObject("bank", bank);
-		modelAndView.setViewName("register_bank_account");
-		return modelAndView;
-	}
-
-	@PostMapping
-	public String registerUserAccount(@ModelAttribute("bank") @Valid BankAccountRegistrationDto bankDao,
-			BindingResult result) {
-
-		if (result.hasErrors()) {
-			return "register_bank_account";
-		} else {
-			bankService.saveBankDetails(bankDao);
-			return "redirect:/register_bank_account?success"; // success is a flag defined in user_registration form as
-																// param.success
-		}
-	}
+        if (result.hasErrors()) {
+            return "bankAccountRegistration";
+        } else {
+            bankRepoService.saveBankDetails(bankDto);
+            return "redirect:/bankAccountRegistration?success";
+        }
+    }
 }

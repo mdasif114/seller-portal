@@ -1,55 +1,60 @@
 package com.seller.portal.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
 import com.seller.portal.entities.Bank;
 import com.seller.portal.entities.User;
 import com.seller.portal.repositories.BankAccountRepository;
-import com.seller.portal.repositories.UserRepository;
-import com.seller.portal.validators.BankAccountRegistrationDto;
+import com.seller.portal.validators.BankRegistrationDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Service
 public class BankRegistrationService {
 
-	@Autowired
-	private BankAccountRepository bankAccountRepository;
+    @Autowired
+    private BankAccountRepository bankRepo;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    HttpSession session;
 
-	private User getAuthenticatedUser() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		return userRepository.findByEmail(authentication.getName());
-	}
+    /**
+     * This method is to fetch Bank account details of user from database.
+     * and returns the data in transfer object
+     *
+     * @return user bank details DTO object
+     */
+    public BankRegistrationDto getBankDetails() {
+        Long userId = (Long) session.getAttribute("userId");
+        Optional bankDataObject = bankRepo.findById(userId);
+        BankRegistrationDto bankDto = new BankRegistrationDto();
+        if (bankDataObject.isPresent()) {
+            Bank bank = (Bank) bankDataObject.get();
+            bankDto.setAccountName(bank.getAccountName());
+            bankDto.setAccountNumber(bank.getAccountNumber());
+            bankDto.setBankName(bank.getBankName());
+            bankDto.setSwiftCode(bank.getSwiftCode());
+        }
+        return bankDto;
+    }
 
-	public Bank getBankDetails() {
-		User user = getAuthenticatedUser();
-		if (user != null && bankAccountRepository.existsById(user.getUserId())) {
-			return bankAccountRepository.getOne(user.getUserId());
-		}
-		return null;
-	}
-
-	public void saveBankDetails(BankAccountRegistrationDto bankRegistrationDAO) {
-		User user = getAuthenticatedUser();
-		if (user != null && bankAccountRepository.existsById(user.getUserId())) {
-			bankAccountRepository.deleteById(user.getUserId());
-		}
-		addBankDetails(user, bankRegistrationDAO);
-	}
-
-	private void addBankDetails(User user, BankAccountRegistrationDto bankRegistrationDAO) {
-		Bank bank = new Bank();
-		bank.setBankId(user.getUserId());
-		bank.setAccountName(bankRegistrationDAO.getAccountName());
-		bank.setAccountNumber(bankRegistrationDAO.getAccountNumber());
-		bank.setBankName(bankRegistrationDAO.getBankName());
-		bank.setSwiftCode(bankRegistrationDAO.getSwiftCode());
-		bank.setUser(user);
-		bankAccountRepository.save(bank);
-	}
+    /**
+     * This method is to store Bank account details of user in database
+     *
+     * @param bankDto it contains the bank data of user filled in
+     *                bank details GUI
+     */
+    public void saveBankDetails(BankRegistrationDto bankDto) {
+        Long userId = (Long) session.getAttribute("userId");
+        Bank bank = new Bank();
+        bank.setAccountName(bankDto.getAccountName());
+        bank.setAccountNumber(bankDto.getAccountNumber());
+        bank.setBankName(bankDto.getBankName());
+        bank.setSwiftCode(bankDto.getSwiftCode());
+        bank.setBankId(userId);
+        bank.setUser(new User(userId));
+        bankRepo.save(bank);
+    }
 
 }

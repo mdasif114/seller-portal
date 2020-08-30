@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BankAccountRegistrationDto {
+public class BankRegistrationDto {
 
 	@NotEmpty(message = "Account name is required")
 	@Size(max = 49, message = "Must have less than 50 characters")

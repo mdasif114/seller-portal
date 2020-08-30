@@ -1,22 +1,22 @@
 package com.seller.portal.service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
-
+import com.seller.portal.entities.Role;
+import com.seller.portal.entities.User;
+import com.seller.portal.repositories.UserRepository;
+import com.seller.portal.validators.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.seller.portal.entities.Role;
-import com.seller.portal.entities.User;
-import com.seller.portal.repositories.UserRepository;
-import com.seller.portal.validators.UserRegistrationDto;
+import javax.servlet.http.HttpSession;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class UserRegistrationService implements UserDetailsService {
@@ -25,16 +25,18 @@ public class UserRegistrationService implements UserDetailsService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private HttpSession session;
 
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
-	
-	/*
-	 * public User getAddress(Long addressId) { return
-	 * userRepository.findByAddressId(addressId); }
-	 */
+
+	public User findByMobileNumber(String mobileNumber) {
+		return userRepository.findByMobileNumber(mobileNumber);
+	}
 	
 	public User save(UserRegistrationDto userRegistration) {
 		User user = new User();
@@ -49,12 +51,13 @@ public class UserRegistrationService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		System.out.println("Asif");
-		User user = userRepository.findByEmail(email);
+		User user = findByEmail(email);
 		
 		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
+
+		session.setAttribute("userId", user.getUserId());
 		
 		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
 				mapRolesToAuthorities(user.getRoles()));
@@ -63,5 +66,4 @@ public class UserRegistrationService implements UserDetailsService {
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
 		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList());
 	}
-
 }

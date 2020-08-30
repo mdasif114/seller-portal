@@ -4,6 +4,7 @@ import com.seller.portal.entities.Role;
 import com.seller.portal.entities.User;
 import com.seller.portal.repositories.UserRepository;
 import com.seller.portal.validators.UserRegistrationDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class UserRegistrationService implements UserDetailsService {
 
@@ -46,6 +48,7 @@ public class UserRegistrationService implements UserDetailsService {
 		user.setEmail(userRegistration.getEmail());
 		user.setPassword(passwordEncoder.encode(userRegistration.getPassword()));
 		user.setRoles(Arrays.asList(new Role("ROLE_USER")));
+		log.info("adding user details into db: " + user);
 		return userRepository.save(user);
 	}
 

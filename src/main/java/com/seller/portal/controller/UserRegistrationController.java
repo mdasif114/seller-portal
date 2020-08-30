@@ -35,11 +35,11 @@ public class UserRegistrationController {
                                       BindingResult result) {
 
         if (isMobileNumberRegistered(userDto)) {
-            result.rejectValue("mobileNumber", null, "This mobile number is already registered");
+            result.rejectValue("mobileNumber", null, "This mobile number is already registered.");
         }
 
         if (isEmailRegistered(userDto)) {
-            result.rejectValue("email", null, "This email is already registered");
+            result.rejectValue("email", null, "This email is already registered.");
         }
 
         if (result.hasErrors()) {

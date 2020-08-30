@@ -48,7 +48,7 @@ public class IdentityRegistrationService {
         if (identity == null) {
             Optional<Identity> identityDataFromDb = identityRepo.findById(userId);
             if (identityDataFromDb.isPresent()) {
-                log.info("Retrieve data from database: ");
+                log.info("Retrieve data from database: " + identityDataFromDb);
                 identity = identityDataFromDb.get();
             }
         }
@@ -72,6 +72,7 @@ public class IdentityRegistrationService {
 
     private Identity createIdentityEntityData(IdentityRegistrationDto identityDto) {
         Long userId = (Long) session.getAttribute(USERID);
+        log.info("UserId from session: " + userId);
         Identity identity = new Identity();
         identity.setDocumentNumber(identityDto.getDocumentNumber());
         identity.setDocumentType(identityDto.getDocumentType());

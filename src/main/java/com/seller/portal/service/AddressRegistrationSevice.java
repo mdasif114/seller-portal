@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 import static com.seller.portal.utils.Constants.ADDRESS;
 import static com.seller.portal.utils.Constants.USERID;
@@ -18,7 +19,7 @@ import static com.seller.portal.utils.Constants.USERID;
 public class AddressRegistrationSevice {
 
     @Autowired
-    private AddressRepository addressRepository;
+    private AddressRepository addressRepo;
 
     @Autowired
     HttpSession session;
@@ -47,9 +48,12 @@ public class AddressRegistrationSevice {
     private Address getUserAddressData() {
         Long userId = (Long) session.getAttribute(USERID);
         Address address = (Address) session.getAttribute(ADDRESS);
-        if (address == null && addressRepository.findById(userId).isPresent()) {
-            address = addressRepository.findById(userId).get();
-            log.info("Retrieved data from database: " + address);
+        if (address == null) {
+            Optional<Address> addressDataFromDb = addressRepo.findById(userId);
+            if (addressDataFromDb.isPresent()) {
+                log.info("Retrieve data from database. ");
+                address = addressDataFromDb.get();
+            }
         }
         return address;
     }
@@ -61,11 +65,11 @@ public class AddressRegistrationSevice {
      */
     public void saveUserAddress(AddressRegistrationDto addressRegistrationDto) {
         Address address = createAddressEntityData(addressRegistrationDto);
-        Address addObjForsession = createSessionObj(addressRegistrationDto);
-        if (!addObjForsession.equals(session.getAttribute(ADDRESS))) {
-            addressRepository.save(address);
+        Address addObjForSession = createSessionObj(addressRegistrationDto);
+        if (!addObjForSession.equals(session.getAttribute(ADDRESS))) {
+            addressRepo.save(address);
             log.info("Address saved successfully in database: " + address);
-            session.setAttribute(ADDRESS, addObjForsession);
+            session.setAttribute(ADDRESS, addObjForSession);
         }
     }
 

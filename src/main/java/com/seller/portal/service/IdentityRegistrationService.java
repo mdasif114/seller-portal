@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
+import static com.seller.portal.utils.Constants.IDENTITY;
+import static com.seller.portal.utils.Constants.USERID;
+
 @Slf4j
 @Service
 public class IdentityRegistrationService {
@@ -26,18 +29,30 @@ public class IdentityRegistrationService {
      * and returns the data in transfer object
      *
      * @return user identity details DTO object
-     * @throws Exception
      */
     public IdentityRegistrationDto getIdentityDetails() {
-        Long userId = (Long) session.getAttribute("userId");
-        Optional identityObject = identityRepo.findById(userId);
+        log.info("Get Identity Details. ");
         IdentityRegistrationDto identityDto = new IdentityRegistrationDto();
-        if (identityObject.isPresent()) {
-            Identity identity = (Identity) identityObject.get();
-            identityDto.setDocumentNumber(identity.getDocumentNumber());
+        Identity identity = getIdentityData();
+        if (identity != null) {
             identityDto.setDocumentType(identity.getDocumentType());
+            identityDto.setDocumentNumber(identity.getDocumentNumber());
+            session.setAttribute(IDENTITY, createSessionObj(identityDto));
         }
         return identityDto;
+    }
+
+    private Identity getIdentityData() {
+        Long userId = (Long) session.getAttribute(USERID);
+        Identity identity = (Identity) session.getAttribute(IDENTITY);
+        if (identity == null) {
+            Optional<Identity> identityDataFromDb = identityRepo.findById(userId);
+            if (identityDataFromDb.isPresent()) {
+                log.info("Retrieve data from database: ");
+                identity = identityDataFromDb.get();
+            }
+        }
+        return identity;
     }
 
     /**
@@ -46,12 +61,26 @@ public class IdentityRegistrationService {
      * @param identityRegistrationDto it contains the identity details of user.
      */
     public void saveIdentityDetails(IdentityRegistrationDto identityRegistrationDto) {
-        Long userId = (Long) session.getAttribute("userId");
+        Identity identity = createIdentityEntityData(identityRegistrationDto);
+        Identity identityObjForSession = createSessionObj(identityRegistrationDto);
+        if (!identityObjForSession.equals(session.getAttribute(IDENTITY))) {
+            identityRepo.save(identity);
+            log.info("Identity saved successfully in database.");
+            session.setAttribute(IDENTITY, identityObjForSession);
+        }
+    }
+
+    private Identity createIdentityEntityData(IdentityRegistrationDto identityDto) {
+        Long userId = (Long) session.getAttribute(USERID);
         Identity identity = new Identity();
-        identity.setDocumentType(identityRegistrationDto.getDocumentType());
-        identity.setDocumentNumber(identityRegistrationDto.getDocumentNumber());
+        identity.setDocumentNumber(identityDto.getDocumentNumber());
+        identity.setDocumentType(identityDto.getDocumentType());
         identity.setIdentityId(userId);
         identity.setUser(new User(userId));
-        identityRepo.save(identity);
+        return identity;
+    }
+
+    private Identity createSessionObj(IdentityRegistrationDto identityDto) {
+        return new Identity(identityDto.getDocumentNumber(), identityDto.getDocumentType());
     }
 }

@@ -1,6 +1,8 @@
 package com.seller.portal.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -9,6 +11,8 @@ import javax.persistence.OneToOne;
 import java.io.Serializable;
 
 @Data
+@NoArgsConstructor
+@EqualsAndHashCode
 @Entity
 public class Bank  implements Serializable {
 
@@ -23,4 +27,11 @@ public class Bank  implements Serializable {
 	@OneToOne
 	@MapsId
 	private User user;
+
+	public Bank(String accountName, String accountNumber, String bankName, String swiftCode) {
+		this.accountName = accountName;
+		this.accountNumber = accountNumber;
+		this.bankName = bankName;
+		this.swiftCode = swiftCode;
+	}
 }

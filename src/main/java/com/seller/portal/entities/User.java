@@ -1,5 +1,6 @@
 package com.seller.portal.entities;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
@@ -20,7 +21,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

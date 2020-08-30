@@ -7,7 +7,7 @@ import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHtt
 @SpringBootApplication
 @EnableJdbcHttpSession
 public class SellerPortalApplication {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         SpringApplication.run(SellerPortalApplication.class, args);
     }
 }

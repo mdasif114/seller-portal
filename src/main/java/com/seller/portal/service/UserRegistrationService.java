@@ -50,7 +50,7 @@ public class UserRegistrationService implements UserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String email) {
 		User user = findByEmail(email);
 		
 		if (user == null) {

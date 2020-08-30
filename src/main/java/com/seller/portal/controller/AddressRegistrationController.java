@@ -42,11 +42,15 @@ public class AddressRegistrationController {
     @PostMapping
     public String registerUserAddress(@ModelAttribute("address") @Valid AddressRegistrationDto aDto,
                                       BindingResult result) {
-        if (result.hasErrors()) {
-            return "addressRegistration";
-        } else {
-            addressService.saveUserAddress(aDto);
-            return "redirect:/addressRegistration?success";
+        try {
+            if (result.hasErrors()) {
+                return "addressRegistration";
+            } else {
+                addressService.saveUserAddress(aDto);
+                return "redirect:/addressRegistration?success";
+            }
+        } catch (Exception ex) {
+            return "internalServerError";
         }
     }
 }

@@ -1,11 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Internal Server Error. Please try again later</title>
+    <title>Internal Server Error</title>
 </head>
 
 <body>
-<h1> Internal Server Error. Please try again later </h1>
+<h1>  </h1>
+<div class="col-sm-15 text-left">
+    <div class="alert alert-info">Internal Server Error. Please login again.
+        <a th:href="@{/login}">Login</a>
+    </div>
+</div>
 
 </body>
 

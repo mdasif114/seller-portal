@@ -43,11 +43,15 @@ public class IdentityRegistrationController {
     @PostMapping
     public String registerUserAccount(@ModelAttribute("identity") @Valid IdentityRegistrationDto identityDto,
                                       BindingResult result) {
-        if (result.hasErrors()) {
-            return "identityRegistration";
-        } else {
-            identityService.saveIdentityDetails(identityDto);
-            return "redirect:/identityRegistration?success";
+        try {
+            if (result.hasErrors()) {
+                return "identityRegistration";
+            } else {
+                identityService.saveIdentityDetails(identityDto);
+                return "redirect:/identityRegistration?success";
+            }
+        } catch (Exception ex) {
+            return "internalServerError";
         }
     }
 }

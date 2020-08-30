@@ -43,11 +43,15 @@ public class BankRegistrationController {
     public String registerUserAccount(@ModelAttribute("bank") @Valid BankRegistrationDto bankDto,
                                       BindingResult result) {
 
-        if (result.hasErrors()) {
-            return "bankAccountRegistration";
-        } else {
-            bankRepoService.saveBankDetails(bankDto);
-            return "redirect:/bankAccountRegistration?success";
+        try {
+            if (result.hasErrors()) {
+                return "bankAccountRegistration";
+            } else {
+                bankRepoService.saveBankDetails(bankDto);
+                return "redirect:/bankAccountRegistration?success";
+            }
+        } catch (Exception ex) {
+            return "internalServerError";
         }
     }
 }

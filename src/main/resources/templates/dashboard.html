@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:attrs="http://www.w3.org/1999/xhtml">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:attrs="http://www.w3.org/1999/xhtml"
+      xmlns:display="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -14,47 +15,53 @@
 <body>
 <br>
 
-<div class="col-md-12 col-md-offset-1">
-    <h2>Dashboard</h2>
-    <div class="col-md-4 col-md-offset-8">
-        <div class="loggedUserBox">
-            <span sec:authentication="principal.username">User</span> <a
-                sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
-        </div>
-    </div>
-</div>
-<br><br><br>
-
 <section class="main-wrap">
     <div class="dashboardWrap">
         <div class="container">
             <div class="row cmptRegistration">
                 <div class="col-sm-12">
+                    <div class="col-sm-6 text-left">
+                        <h2>
+                            Dashboard
+                        </h2>
+                    </div>
+                    <br>
+                    <div class="col-sm-6 text-right">
+                        <h4>
+                            <span sec:authentication="principal.username">User</span>
+                            <a sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
+                        </h4>
+                    </div>
+                </div>
+                <br><br>
+                <div class="col-sm-12">
                     <div th:unless="${session.dashboard}">
-                        <div class="col-sm-3 text-center">
+                        <br>
+                        <div class="col-sm-15 text-center">
                             <h4>
                                 <div class="alert alert-info">Complete your registration
                                 </div>
-                                <br><br>
                             </h4>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-12">
-                    <br><br><br>
                     <div class="row">
-                        <div class="col-sm-4 text-center">
-                            <div class="regiStep">1</div>
-                            <a th:href="@{/addressRegistration}">Address</a>
-                        </div>
-                        <div class="col-sm-4 text-center">
-                            <div class="regiStep">2</div>
-                            <a th:href="@{/identityRegistration}">Identity</a>
-                        </div>
-                        <div class="col-sm-4 text-center">
-                            <div class="regiStep">3</div>
-                            <a th:href="@{/bankAccountRegistration}">Bank Account</a>
-                        </div>
+                        <br><br><br><br><br>
+                        <h4>
+                            <div class="col-sm-4 text-center">
+                                <div class="regiStep">1</div>
+                                <a th:href="@{/addressRegistration}">Address</a>
+                            </div>
+                            <div class="col-sm-4 text-center">
+                                <div class="regiStep">2</div>
+                                <a th:href="@{/identityRegistration}">Identity</a>
+                            </div>
+                            <div class="col-sm-4 text-center">
+                                <div class="regiStep">3</div>
+                                <a th:href="@{/bankAccountRegistration}">Bank Account</a>
+                            </div>
+                        </h4>
                     </div>
                 </div>
                 <div class="col-xs-12">
